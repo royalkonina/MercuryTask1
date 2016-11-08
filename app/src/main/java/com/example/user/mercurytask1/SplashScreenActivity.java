@@ -1,11 +1,11 @@
 package com.example.user.mercurytask1;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class a_splashscreen extends AppCompatActivity {
+public class SplashScreenActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -15,8 +15,8 @@ public class a_splashscreen extends AppCompatActivity {
       new Handler().postDelayed(new Runnable() {
         @Override
         public void run() {
-          Intent intent = new Intent(a_splashscreen.this, a_list.class);
-          a_splashscreen.this.startActivity(intent);
+          Intent intent = new Intent(SplashScreenActivity.this, ListActivity.class);
+          SplashScreenActivity.this.startActivity(intent);
           finish();
         }
       }, 2000);
