@@ -1,6 +1,6 @@
 package com.example.user.mercurytask1;
 
-import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +13,9 @@ import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   private List<Record> data;
-  private int selected_position;
 
   public ListAdapter(List<Record> data) {
     this.data = data;
-    this.selected_position = -1;
   }
 
   @Override
@@ -31,25 +29,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   public void onBindViewHolder(ViewHolder holder, final int position) {
     Record element = data.get(position);
     holder.textView.setText(element.getText());
-    holder.circle.setBackgroundColor(element.getColor());
-    if (position == selected_position) {
-      holder.textView.setBackgroundColor(Color.GRAY);
-      holder.textView.setTextColor(Color.WHITE);
-      System.err.println("Clicked on " + holder.textView.getX() + " " + holder.textView.getY());
-    }else{
-      holder.textView.setBackgroundColor(Color.WHITE);
-      holder.textView.setTextColor(Color.BLACK);
-    }
+    holder.circle.setColorFilter(element.getColor());
+    if(!element.isShouldBeShown())holder.circle.setVisibility(View.INVISIBLE);
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        int prevSelPosition = selected_position;
-        selected_position = position;
-        System.err.println(position);
-        notifyItemChanged(prevSelPosition);
-        notifyItemChanged(position);
+        view.setSelected(!view.isSelected());
+        if(view.isSelected())Snackbar.make(view, "You clicked on element #" + (position + 1), Snackbar.LENGTH_SHORT).show();
       }
     });
+
   }
 
   @Override
