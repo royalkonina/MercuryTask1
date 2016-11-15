@@ -4,4 +4,6 @@
     <string name="confirmationQuestion">R u sure u want to delete selected item(s)?</string>
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
+    <string name="enter_a_name">Enter a name</string>
+    <string name="add_element">Add element</string>
 </resources>

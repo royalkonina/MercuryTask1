@@ -30,12 +30,23 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   }
 
 
+
   @Override
   public void onBindViewHolder(ViewHolder holder, final int position) {
     Record element = data.get(position);
     holder.textView.setText(element.getText());
     holder.circle.setColorFilter(element.getColor());
-    if (!element.isShouldBeShown()) holder.circle.setVisibility(View.INVISIBLE);
+    if(selectedItems.contains(position)){
+      holder.itemView.setSelected(true);
+    }else{
+      holder.itemView.setSelected(false);
+    }
+    if (!element.isShouldBeShown()) {
+      holder.circle.setVisibility(View.INVISIBLE);
+    } else {
+      holder.circle.setVisibility(View.VISIBLE);
+    }
+
     holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View view) {
