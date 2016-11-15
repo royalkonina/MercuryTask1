@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SplashScreen</string>
+    <string name="remove_elements">Remove elements</string>
+    <string name="confirmationQuestion">R u sure u want to delete selected item(s)?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
 </resources>

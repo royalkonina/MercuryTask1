@@ -1,6 +1,7 @@
 package com.example.user.mercurytask1;
 
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,13 @@ import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   private List<Record> data;
+  private List<Integer> selectedItems;
+  private AppCompatActivity activity;
 
-  public ListAdapter(List<Record> data) {
+  public ListAdapter(List<Record> data, List<Integer> selectedItems, AppCompatActivity activity) {
     this.data = data;
+    this.selectedItems = selectedItems;
+    this.activity = activity;
   }
 
   @Override
@@ -30,12 +35,19 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     Record element = data.get(position);
     holder.textView.setText(element.getText());
     holder.circle.setColorFilter(element.getColor());
-    if(!element.isShouldBeShown())holder.circle.setVisibility(View.INVISIBLE);
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
+    if (!element.isShouldBeShown()) holder.circle.setVisibility(View.INVISIBLE);
+    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
-      public void onClick(View view) {
+      public boolean onLongClick(View view) {
         view.setSelected(!view.isSelected());
-        if(view.isSelected())Snackbar.make(view, "You clicked on element #" + (position + 1), Snackbar.LENGTH_SHORT).show();
+        if (view.isSelected()) {
+          Snackbar.make(view, "You selected element #" + (position + 1), Snackbar.LENGTH_SHORT).show();
+          selectedItems.add(position);
+        } else {
+          selectedItems.remove(Integer.valueOf(position));
+        }
+        activity.invalidateOptionsMenu();
+        return true;
       }
     });
 
