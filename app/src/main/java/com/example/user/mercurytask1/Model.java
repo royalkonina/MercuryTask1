@@ -14,8 +14,8 @@ public class Model {
   private Set<String> usedNames;
   private boolean created = false;
   private static Model instance;
-  private static int[] colorsRainbow = {Color.RED, Color.rgb(255, 140, 0), Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.rgb(75, 0, 130), Color.TRANSPARENT};
-  private static String[] colorNames = {"Red","Orange","Yellow","Green","Blue","Cyan","Violet", "Invisible"};
+  public static final int[] colorsRainbow = {Color.RED, Color.rgb(255, 140, 0), Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.rgb(75, 0, 130), Color.TRANSPARENT};
+  public static final String[] colorNames = {"Red","Orange","Yellow","Green","Blue","Cyan","Violet", "Invisible"};
 
   private Model() {
     data = new ArrayList<>();
@@ -54,4 +54,5 @@ public class Model {
       usedNames.add("Element " + (i + 1));
     }
   }
+
 }

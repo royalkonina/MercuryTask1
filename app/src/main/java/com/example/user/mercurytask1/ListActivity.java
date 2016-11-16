@@ -90,7 +90,11 @@ public class ListActivity extends AppCompatActivity {
 
   public boolean addNewElement(String name, int color) {
     if (!usedNames.contains(name)) {
-      Record element = new Record(name, color, true);
+      Record element;
+      if (color == Model.colorsRainbow[Model.colorsRainbow.length - 1])
+        element = new Record(name, color, false);
+      else
+        element = new Record(name, color, true);
       data.add(element);
       usedNames.add(name);
       adapter.notifyDataSetChanged();
