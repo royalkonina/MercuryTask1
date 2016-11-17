@@ -1,52 +1,46 @@
 package com.example.user.mercurytask1;
 
 import android.app.DialogFragment;
-import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.ImageButton;
-import android.widget.SimpleExpandableListAdapter;
+import android.widget.LinearLayout;
 
-import java.util.Random;
+import java.util.ArrayList;
 
 
 public class AddElementDialog extends DialogFragment implements View.OnClickListener {
-  private int selectedColor;
+  private int selectedColor = -1;
+  private ArrayList<ImageButton> buttons;
 
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View v = inflater.inflate(R.layout.df_adding, container);
+    View v = inflater.inflate(R.layout.d_adding, container);
     Button addButton = (Button) v.findViewById(R.id.add_button);
     final EditText editText = (EditText) v.findViewById(R.id.edit_text);
-
-    ImageButton[] buttons = new ImageButton[8];
-    buttons[0] = (ImageButton) v.findViewById(R.id.colorButtonRed);
-    buttons[1] = (ImageButton) v.findViewById(R.id.colorButtonOrange);
-    buttons[2] = (ImageButton) v.findViewById(R.id.colorButtonYellow);
-    buttons[3] = (ImageButton) v.findViewById(R.id.colorButtonGreen);
-    buttons[4] = (ImageButton) v.findViewById(R.id.colorButtonBlue);
-    buttons[5] = (ImageButton) v.findViewById(R.id.colorButtonCyan);
-    buttons[6] = (ImageButton) v.findViewById(R.id.colorButtonViolet);
-    buttons[7] = (ImageButton) v.findViewById(R.id.colorButtonTransparent);
-    for (int i = 0; i < 8; i++) {
-      buttons[i].setColorFilter(Model.colorsRainbow[i]);
-      buttons[i].setOnClickListener(this);
+    LinearLayout buttonsLayout = (LinearLayout) v.findViewById(R.id.buttonLayout);
+    buttons = new ArrayList<>();
+    int countChildren = buttonsLayout.getChildCount();
+    for (int i = 0; i < countChildren; i++) {
+      ImageButton colorButton = (ImageButton) buttonsLayout.getChildAt(i);
+      colorButton.setColorFilter(Model.colorsRainbow[i]);
+      colorButton.setOnClickListener(this);
+      buttons.add(colorButton);
     }
-
     addButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        ListActivity parentActivity = (ListActivity) getActivity();
-        boolean isAdded = parentActivity.addNewElement(String.valueOf(editText.getText()),  selectedColor);
-        if (isAdded) {
+        String name = String.valueOf(editText.getText());
+        Model model = Model.getInstance();
+        boolean canBeAdded = model.needToInsert(name);
+        if (canBeAdded) {
+          model.addNewElement(name, selectedColor);
           dismiss();
         } else {
           editText.setError("This name is already in use");
@@ -58,9 +52,13 @@ public class AddElementDialog extends DialogFragment implements View.OnClickList
 
   @Override
   public void onClick(View view) {
+    for (ImageButton button : buttons) {
+      button.setSelected(false);
+    }
     ImageButton buttonClicked = (ImageButton) view;
+    buttonClicked.setSelected(true);
     int id = buttonClicked.getId();
-    switch (id){
+    switch (id) {
       case R.id.colorButtonRed:
         selectedColor = Model.colorsRainbow[0];
         break;

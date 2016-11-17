@@ -11,35 +11,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-public class ListActivity extends AppCompatActivity {
-  private List<Record> data;
-  private List<Integer> selectedItems;
+public class ListActivity extends AppCompatActivity implements View.OnLongClickListener {
   private ListAdapter adapter;
-  private Set<String> usedNames;
-  private Model model;
   private AddElementDialog dialog;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.a_list);
-    this.model = Model.getInstance();
-    if (!model.isCreated()) {
-      model.fillData(50);
-      model.setCreated(true);
-    }
-    this.data = model.getData();
-    this.selectedItems = model.getSelectedItems();
-    this.usedNames = model.getUsedNames();
-
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    adapter = new ListAdapter(data, selectedItems, this);
+    adapter = new ListAdapter();
     recyclerView.setAdapter(adapter);
 
     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -55,7 +39,7 @@ public class ListActivity extends AppCompatActivity {
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    if (selectedItems != null && selectedItems.size() != 0) {
+    if (selectedItems.size() != 0) {
       getMenuInflater().inflate(R.menu.menu, menu);
     }
     return super.onPrepareOptionsMenu(menu);
@@ -68,13 +52,7 @@ public class ListActivity extends AppCompatActivity {
       builder.setMessage(R.string.confirmationQuestion)
               .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                  int countDeleted = 0;
-                  Collections.sort(selectedItems);
-                  for (int position : selectedItems) {
-                    usedNames.remove(data.get(position - countDeleted).getText());
-                    data.remove(position - countDeleted++);
-                  }
-                  selectedItems.clear();
+                  Model.getInstance().removeItems();
                   adapter.notifyDataSetChanged();
                   invalidateOptionsMenu();
                 }
@@ -88,19 +66,9 @@ public class ListActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  public boolean addNewElement(String name, int color) {
-    if (!usedNames.contains(name)) {
-      Record element;
-      if (color == Model.colorsRainbow[Model.colorsRainbow.length - 1])
-        element = new Record(name, color, false);
-      else
-        element = new Record(name, color, true);
-      data.add(element);
-      usedNames.add(name);
-      adapter.notifyDataSetChanged();
-      return true;
-    }
+
+  @Override
+  public boolean onLongClick(View view) {
     return false;
   }
-
 }

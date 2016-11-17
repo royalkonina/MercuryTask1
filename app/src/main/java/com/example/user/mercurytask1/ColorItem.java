@@ -1,15 +1,13 @@
 package com.example.user.mercurytask1;
 
 
-public class Record {
+public class ColorItem {
   private int color;
   private String text;
-  private boolean shouldBeShown;
 
-  public Record(String text, int color, boolean shouldBeShown) {
+  public ColorItem(String text, int color) {
     this.color = color;
     this.text = text;
-    this.shouldBeShown = shouldBeShown;
   }
 
   public int getColor() {
@@ -20,7 +18,4 @@ public class Record {
     return text;
   }
 
-  public boolean isShouldBeShown() {
-    return shouldBeShown;
-  }
 }

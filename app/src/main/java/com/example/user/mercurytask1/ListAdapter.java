@@ -9,19 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
-  private List<Record> data;
-  private List<Integer> selectedItems;
-  private AppCompatActivity activity;
-
-  public ListAdapter(List<Record> data, List<Integer> selectedItems, AppCompatActivity activity) {
-    this.data = data;
-    this.selectedItems = selectedItems;
-    this.activity = activity;
-  }
 
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,44 +21,32 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     return new ViewHolder(v);
   }
 
-
-
   @Override
   public void onBindViewHolder(ViewHolder holder, final int position) {
-    Record element = data.get(position);
+    final Model model = Model.getInstance();
+    final ColorItem element = model.getItem(position);
     holder.textView.setText(element.getText());
     holder.circle.setColorFilter(element.getColor());
-    if(selectedItems.contains(position)){
-      holder.itemView.setSelected(true);
-    }else{
-      holder.itemView.setSelected(false);
-    }
-    if (!element.isShouldBeShown()) {
-      holder.circle.setVisibility(View.INVISIBLE);
-    } else {
-      holder.circle.setVisibility(View.VISIBLE);
-    }
+    holder.itemView.setSelected(model.isItemSelected(position));
 
     holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View view) {
         view.setSelected(!view.isSelected());
         if (view.isSelected()) {
-          Snackbar.make(view, "You selected element #" + (position + 1), Snackbar.LENGTH_SHORT).show();
-          selectedItems.add(position);
+          Snackbar.make(view, "You selected " + element.getText(), Snackbar.LENGTH_SHORT).show();
+          model.addSelection(position);
         } else {
-          selectedItems.remove(Integer.valueOf(position));
+          model.removeSelection(position);
         }
-        activity.invalidateOptionsMenu();
         return true;
       }
     });
-
   }
 
   @Override
   public int getItemCount() {
-    return data.size();
+    return Model.getInstance().getItemCount();
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
