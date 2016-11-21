@@ -1,6 +1,7 @@
 package com.example.user.mercurytask1;
 
 import android.app.DialogFragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 
 public class AddElementDialog extends DialogFragment implements View.OnClickListener {
-  private int selectedColor = -1;
+  private int selectedColor = Color.TRANSPARENT;
   private ArrayList<ImageButton> buttons;
 
   @Nullable
@@ -30,6 +31,7 @@ public class AddElementDialog extends DialogFragment implements View.OnClickList
     for (int i = 0; i < countChildren; i++) {
       ImageButton colorButton = (ImageButton) buttonsLayout.getChildAt(i);
       colorButton.setColorFilter(Model.colorsRainbow[i]);
+      colorButton.setTag(i);
       colorButton.setOnClickListener(this);
       buttons.add(colorButton);
     }
@@ -40,7 +42,7 @@ public class AddElementDialog extends DialogFragment implements View.OnClickList
         Model model = Model.getInstance();
         boolean canBeAdded = model.needToInsert(name);
         if (canBeAdded) {
-          model.addNewElement(name, selectedColor);
+          model.addItem(name, selectedColor);
           dismiss();
         } else {
           editText.setError("This name is already in use");
@@ -57,33 +59,7 @@ public class AddElementDialog extends DialogFragment implements View.OnClickList
     }
     ImageButton buttonClicked = (ImageButton) view;
     buttonClicked.setSelected(true);
-    int id = buttonClicked.getId();
-    switch (id) {
-      case R.id.colorButtonRed:
-        selectedColor = Model.colorsRainbow[0];
-        break;
-      case R.id.colorButtonOrange:
-        selectedColor = Model.colorsRainbow[1];
-        break;
-      case R.id.colorButtonYellow:
-        selectedColor = Model.colorsRainbow[2];
-        break;
-      case R.id.colorButtonGreen:
-        selectedColor = Model.colorsRainbow[3];
-        break;
-      case R.id.colorButtonBlue:
-        selectedColor = Model.colorsRainbow[4];
-        break;
-      case R.id.colorButtonCyan:
-        selectedColor = Model.colorsRainbow[5];
-        break;
-      case R.id.colorButtonViolet:
-        selectedColor = Model.colorsRainbow[6];
-        break;
-      case R.id.colorButtonTransparent:
-        selectedColor = Model.colorsRainbow[7];
-        break;
-    }
-
+    int colorIndex = (int) buttonClicked.getTag();
+    selectedColor = Model.colorsRainbow[colorIndex];
   }
 }

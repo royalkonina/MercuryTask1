@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:minWidth="150dp"
+              android:minWidth="1500dp"
               android:orientation="vertical">
 
     <EditText
@@ -25,13 +25,14 @@
 
         <LinearLayout
             android:id="@+id/buttonLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/colorButtonRed"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/s_background"
@@ -39,7 +40,8 @@
 
             <ImageButton
                 android:id="@+id/colorButtonOrange"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/s_background"
@@ -47,7 +49,8 @@
 
             <ImageButton
                 android:id="@+id/colorButtonYellow"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/s_background"
@@ -56,14 +59,16 @@
 
             <ImageButton
                 android:id="@+id/colorButtonGreen"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/s_background"
                 android:src="@drawable/circle"/>
             <ImageButton
                 android:id="@+id/colorButtonBlue"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/s_background"
@@ -71,7 +76,8 @@
 
             <ImageButton
                 android:id="@+id/colorButtonCyan"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/s_background"
@@ -79,15 +85,8 @@
 
             <ImageButton
                 android:id="@+id/colorButtonViolet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/s_background"
-                android:src="@drawable/circle"/>
-
-            <ImageButton
-                android:id="@+id/colorButtonTransparent"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/s_background"

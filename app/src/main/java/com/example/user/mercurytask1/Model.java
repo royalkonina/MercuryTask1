@@ -12,7 +12,6 @@ import java.util.Set;
 public class Model {
   private List<ColorItem> data;
   private Set<String> usedNames;
-  private List<Integer> selectedItems;
   private static Model instance;
   public static final int[] colorsRainbow = {Color.RED, Color.rgb(255, 140, 0), Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.rgb(75, 0, 130), Color.TRANSPARENT};
   /*public static final String[] colorNames = {"Red","Orange","Yellow","Green","Blue","Cyan","Violet", "Invisible"};*/
@@ -20,7 +19,6 @@ public class Model {
   private Model() {
     data = new ArrayList<>();
     usedNames = new HashSet<>();
-    selectedItems = new ArrayList<>();
   }
 
 
@@ -51,30 +49,14 @@ public class Model {
     return name.length() > 0 && !usedNames.contains(name);
   }
 
-  public void addNewElement(String name, int color) {
+  public void addItem(String name, int color) {
     data.add(new ColorItem(name, color));
     usedNames.add(name);
   }
 
-  public void removeItems() {
-    int countDeleted = 0;
-    Collections.sort(selectedItems);
-    for (int position : selectedItems) {
-      usedNames.remove(data.get(position - countDeleted).getText());
-      data.remove(position - countDeleted++);
-    }
-    selectedItems.clear();
-  }
 
-  public boolean isItemSelected(int position) {
-    return selectedItems.contains(position);
-  }
-
-  public void addSelection(int position) {
-    selectedItems.add(position);
-  }
-
-  public void removeSelection(Integer item) {
-    selectedItems.remove(item);
+  public void removeItem(int position) {
+    usedNames.remove(data.get(position).getText());
+    data.remove(position);
   }
 }

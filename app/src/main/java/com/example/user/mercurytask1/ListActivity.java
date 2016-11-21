@@ -3,6 +3,8 @@ package com.example.user.mercurytask1;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +13,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 
 public class ListActivity extends AppCompatActivity implements View.OnLongClickListener {
   private ListAdapter adapter;
   private AddElementDialog dialog;
+  private int countSelectedItems = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +25,19 @@ public class ListActivity extends AppCompatActivity implements View.OnLongClickL
     setContentView(R.layout.a_list);
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    adapter = new ListAdapter();
+    adapter = new ListAdapter(new Handler.Callback() {
+      @Override
+      public boolean handleMessage(Message message) {
+        countSelectedItems = message.arg1;
+        invalidateOptionsMenu();
+        return false;
+      }
+    });
     recyclerView.setAdapter(adapter);
 
     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -39,7 +50,7 @@ public class ListActivity extends AppCompatActivity implements View.OnLongClickL
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    if (selectedItems.size() != 0) {
+    if (countSelectedItems != 0) {
       getMenuInflater().inflate(R.menu.menu, menu);
     }
     return super.onPrepareOptionsMenu(menu);
@@ -52,7 +63,7 @@ public class ListActivity extends AppCompatActivity implements View.OnLongClickL
       builder.setMessage(R.string.confirmationQuestion)
               .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                  Model.getInstance().removeItems();
+                  adapter.removeItems();
                   adapter.notifyDataSetChanged();
                   invalidateOptionsMenu();
                 }
