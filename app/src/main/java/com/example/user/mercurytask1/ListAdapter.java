@@ -1,17 +1,12 @@
 package com.example.user.mercurytask1;
 
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,13 +14,13 @@ import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   private List<Integer> selectedItems;
-  private Handler.Callback callback;
+  private OnItemCheckListener selectionListener;
 
 
-  public ListAdapter(Handler.Callback callback) {
+  public ListAdapter(OnItemCheckListener selectionListener) {
     super();
     selectedItems = new ArrayList<>();
-    this.callback = callback;
+    this.selectionListener = selectionListener;
   }
 
   @Override
@@ -36,7 +31,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
   @Override
   public void onBindViewHolder(ViewHolder holder, final int position) {
-    Model model = Model.getInstance();
+    Model model = Model.getInstance(null);
     final ColorItem element = model.getItem(position);
     holder.textView.setText(element.getText());
     holder.circle.setColorFilter(element.getColor());
@@ -52,9 +47,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         } else {
           selectedItems.remove(Integer.valueOf(position));
         }
-        Message message = new Message();
-        message.arg1 = selectedItems.size();
-        callback.handleMessage(message);
+        selectionListener.onItemSelected(selectedItems.size());
         return true;
       }
     });
@@ -63,20 +56,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
   public void removeItems() {
     int countDeleted = 0;
     Collections.sort(selectedItems);
-    Model model = Model.getInstance();
+    Model model = Model.getInstance(null);
     for (int position : selectedItems) {
       model.removeItem(position - countDeleted);
       countDeleted++;
     }
     selectedItems.clear();
-    Message message = new Message();
-    message.arg1 = selectedItems.size();
-    callback.handleMessage(message);
+    selectionListener.onItemSelected(selectedItems.size());
   }
 
   @Override
   public int getItemCount() {
-    return Model.getInstance().getItemCount();
+    return Model.getInstance(null).getItemCount();
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {

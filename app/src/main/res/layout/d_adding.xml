@@ -24,7 +24,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/buttonLayout"
+            android:id="@+id/button_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -65,6 +65,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/s_background"
                 android:src="@drawable/circle"/>
+
             <ImageButton
                 android:id="@+id/colorButtonBlue"
                 android:layout_width="0dp"

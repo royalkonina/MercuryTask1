@@ -1,9 +1,7 @@
 package com.example.user.mercurytask1;
 
-import android.graphics.Color;
-
+import android.content.Context;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,8 +11,8 @@ public class Model {
   private List<ColorItem> data;
   private Set<String> usedNames;
   private static Model instance;
-  public static final int[] colorsRainbow = {Color.RED, Color.rgb(255, 140, 0), Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.rgb(75, 0, 130), Color.TRANSPARENT};
-  /*public static final String[] colorNames = {"Red","Orange","Yellow","Green","Blue","Cyan","Violet", "Invisible"};*/
+  public static final int[] colorsRainbow = {R.color.colorRed, R.color.colorOrange, R.color.colorYellow, R.color.colorGreen, R.color.colorBlue, R.color.colorCyan, R.color.colorViolet, R.color.colorTransparent};
+
 
   private Model() {
     data = new ArrayList<>();
@@ -22,10 +20,10 @@ public class Model {
   }
 
 
-  public static Model getInstance() {
+  public static Model getInstance(Context context) {
     if (instance == null) {
       instance = new Model();
-      instance.fillData(50);
+      instance.fillData(context, 50);
     }
     return instance;
   }
@@ -38,9 +36,10 @@ public class Model {
     return data.size();
   }
 
-  private void fillData(int countElements) {
+  private void fillData(Context context, int countElements) {
     for (int i = 0; i < countElements; i++) {
-      data.add(new ColorItem("Element " + (i + 1), colorsRainbow[i % colorsRainbow.length]));
+      int curColor = context.getResources().getColor(colorsRainbow[i % colorsRainbow.length]);
+      data.add(new ColorItem("Element " + (i + 1), curColor));
       usedNames.add("Element " + (i + 1));
     }
   }

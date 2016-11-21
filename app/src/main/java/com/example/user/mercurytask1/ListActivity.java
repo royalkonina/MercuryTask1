@@ -3,8 +3,6 @@ package com.example.user.mercurytask1;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,15 +20,15 @@ public class ListActivity extends AppCompatActivity implements View.OnLongClickL
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Model.getInstance(this);
     setContentView(R.layout.a_list);
-    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    adapter = new ListAdapter(new Handler.Callback() {
+    adapter = new ListAdapter(new OnItemCheckListener() {
       @Override
-      public boolean handleMessage(Message message) {
-        countSelectedItems = message.arg1;
+      public void onItemSelected(int countSelected) {
+        countSelectedItems = countSelected;
         invalidateOptionsMenu();
-        return false;
       }
     });
     recyclerView.setAdapter(adapter);
@@ -42,8 +40,15 @@ public class ListActivity extends AppCompatActivity implements View.OnLongClickL
       @Override
       public void onClick(View view) {
         dialog = new AddElementDialog();
+        dialog.setSelectedColor(getResources().getColor(R.color.colorTransparent));
+        dialog.setOnItemAddedListener(new OnItemAddedListener() {
+          @Override
+          public void onItemAdded() {
+            adapter.notifyDataSetChanged();
+          }
+        });
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        dialog.show(ft, "dialog");
+        dialog.show(ft, AddElementDialog.TAG);
       }
     });
   }
@@ -58,7 +63,7 @@ public class ListActivity extends AppCompatActivity implements View.OnLongClickL
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.removeItem) {
+    if (item.getItemId() == R.id.remove_item) {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setMessage(R.string.confirmationQuestion)
               .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {

@@ -11,13 +11,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-
 import java.util.ArrayList;
 
 
 public class AddElementDialog extends DialogFragment implements View.OnClickListener {
-  private int selectedColor = Color.TRANSPARENT;
+  private int selectedColor;
   private ArrayList<ImageButton> buttons;
+  public static final String TAG = "AddElementDialog";
+  private OnItemAddedListener onItemAddedListener;
+
+  public void setOnItemAddedListener(OnItemAddedListener onItemAddedListener) {
+    this.onItemAddedListener = onItemAddedListener;
+  }
+
+  public void setSelectedColor(int selectedColor) {
+    this.selectedColor = selectedColor;
+  }
 
   @Nullable
   @Override
@@ -25,12 +34,13 @@ public class AddElementDialog extends DialogFragment implements View.OnClickList
     View v = inflater.inflate(R.layout.d_adding, container);
     Button addButton = (Button) v.findViewById(R.id.add_button);
     final EditText editText = (EditText) v.findViewById(R.id.edit_text);
-    LinearLayout buttonsLayout = (LinearLayout) v.findViewById(R.id.buttonLayout);
+    LinearLayout buttonsLayout = (LinearLayout) v.findViewById(R.id.button_layout);
     buttons = new ArrayList<>();
     int countChildren = buttonsLayout.getChildCount();
     for (int i = 0; i < countChildren; i++) {
       ImageButton colorButton = (ImageButton) buttonsLayout.getChildAt(i);
-      colorButton.setColorFilter(Model.colorsRainbow[i]);
+      int curColor = getResources().getColor(Model.colorsRainbow[i]);
+      colorButton.setColorFilter(curColor);
       colorButton.setTag(i);
       colorButton.setOnClickListener(this);
       buttons.add(colorButton);
@@ -39,13 +49,14 @@ public class AddElementDialog extends DialogFragment implements View.OnClickList
       @Override
       public void onClick(View view) {
         String name = String.valueOf(editText.getText());
-        Model model = Model.getInstance();
+        Model model = Model.getInstance(null);
         boolean canBeAdded = model.needToInsert(name);
         if (canBeAdded) {
           model.addItem(name, selectedColor);
+          onItemAddedListener.onItemAdded();
           dismiss();
         } else {
-          editText.setError("This name is already in use");
+          editText.setError(getString(R.string.error_message));
         }
       }
     });
@@ -60,6 +71,6 @@ public class AddElementDialog extends DialogFragment implements View.OnClickList
     ImageButton buttonClicked = (ImageButton) view;
     buttonClicked.setSelected(true);
     int colorIndex = (int) buttonClicked.getTag();
-    selectedColor = Model.colorsRainbow[colorIndex];
+    selectedColor = getResources().getColor(Model.colorsRainbow[colorIndex]);
   }
 }
